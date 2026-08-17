@@ -1,0 +1,309 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="theme-color" content="#111111">
+<title>B.G. Bicklehooper Estimator</title>
+<style>
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:#f2f3f4;color:#111}
+header{background:#111;color:#fff;padding:22px 18px calc(18px + env(safe-area-inset-top));position:sticky;top:0;z-index:2}
+h1{font-size:22px;margin:0 0 4px}.sub{opacity:.75;font-size:13px}
+main{max-width:620px;margin:auto;padding:16px 14px 40px}
+.card{background:#fff;border-radius:16px;padding:16px;margin:12px 0;box-shadow:0 2px 8px #00000012}
+label{display:block;font-weight:700;font-size:14px;margin:12px 0 6px}
+select,input{width:100%;padding:13px;border:1px solid #d5d7da;border-radius:11px;font-size:16px;background:#fff}
+.grid{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+button{width:100%;border:0;border-radius:12px;padding:15px;font-size:16px;font-weight:800;cursor:pointer}
+.primary{background:#1f7a3a;color:#fff}.secondary{background:#111;color:#fff}.light{background:#e9eaec;color:#111}
+.result{background:#111;color:#fff;border-radius:16px;padding:18px;margin-top:14px}
+.big{font-size:34px;font-weight:900}.muted{opacity:.7}.line{display:flex;justify-content:space-between;margin:8px 0}.profit{font-size:20px;font-weight:800}
+.itemrow{display:flex;gap:8px;align-items:center;margin:8px 0}.itemrow select{flex:1}.itemrow input{width:85px}
+.small{font-size:12px;color:#666;margin-top:7px}
+</style>
+</head>
+<body>
+<header>
+<h1>B.G. Bicklehooper Junk Removal</h1>
+<div class="sub">Sarasota • Quick Quote Estimator</div>
+</header>
+<main>
+<div class="card">
+<h2>Pricing Settings</h2>
+<div class="grid">
+<div><label>Trailer capacity (yd³)</label><input id="capacity" type="number" step="0.01" value="4.44"></div>
+<div><label>Legacy $/yard reference</label><input id="yard" type="number" value="125"></div>
+</div>
+<div class="grid">
+<div><label>Minimum charge</label><input id="base" type="number" value="125"></div>
+<div><label>Target gross margin %</label><input id="margin" type="number" value="55"></div>
+</div>
+<div class="small">These are your business defaults. Change them anytime; every quote will use the new settings.</div>
+</div>
+
+
+<div class="card">
+<h2>Established B.G. Bicklehooper Price Ladder</h2>
+<div class="grid">
+<div><label>Minimum / up to 0.55 yd³</label><input id="p_min" type="number" value="125"></div>
+<div><label>1/8 load (~0.7 yd³)</label><input id="p_18" type="number" value="175"></div>
+<div><label>1/6 load (~0.8 yd³)</label><input id="p_16" type="number" value="225"></div>
+<div><label>1/4 load (~1.1 yd³)</label><input id="p_14" type="number" value="295"></div>
+<div><label>1/3 load (~1.5 yd³)</label><input id="p_13" type="number" value="375"></div>
+<div><label>1/2 load (~2.2 yd³)</label><input id="p_12" type="number" value="495"></div>
+<div><label>2/3 load (~3.0 yd³)</label><input id="p_23" type="number" value="625"></div>
+<div><label>3/4 load (~3.3 yd³)</label><input id="p_34" type="number" value="725"></div>
+<div><label>Full load (~4.4 yd³)</label><input id="p_full" type="number" value="825"></div>
+</div>
+<div class="small">These are the prices we established previously. You can change any amount later.</div>
+</div>
+<div class="card">
+<h2>Customer / Job</h2>
+<label>Customer name</label>
+<input id="cust_name" type="text" placeholder="Customer name">
+<div class="grid">
+  <div><label>Phone</label><input id="cust_phone" type="tel" placeholder="941-555-1234"></div>
+  <div><label>Job date</label><input id="job_date" type="date"></div>
+</div>
+<label>Address</label>
+<input id="cust_address" type="text" placeholder="Job address">
+<label>Job notes</label>
+<textarea id="job_notes" rows="3" style="width:100%;padding:13px;border:1px solid #d5d7da;border-radius:11px;font-size:16px;background:#fff" placeholder="Furniture, garage cleanout, stairs, etc."></textarea>
+</div>
+
+<div class="card">
+<h2>1. Load size</h2>
+<label>Estimated trailer load</label>
+<select id="load">
+<option value="0.125">1/8 load</option><option value="0.25">1/4 load</option>
+<option value="0.3333">1/3 load</option><option value="0.5" selected>1/2 load</option>
+<option value="0.6667">2/3 load</option><option value="0.75">3/4 load</option><option value="1">Full load</option>
+</select>
+<div class="small">Working capacity is set at 4.44 cubic yards for a 5×8×3 trailer (120 cubic feet). We can change this in Settings if your actual trailer dimensions differ.</div>
+</div>
+
+<div class="card">
+<h2>2. Job details</h2>
+<div class="grid"><div><label>Fuel / travel charge</label><input id="travel" type="number" value="0"></div>
+</div>
+<label>Access</label>
+<select id="access"><option value="0">Easy</option><option value="25" selected>Normal</option><option value="60">Difficult</option><option value="100">Stairs / long carry</option></select>
+<label>Labor time</label>
+<select id="labor"><option value="0">Under 1 hour</option><option value="40">1–2 hours</option><option value="80">2–3 hours</option><option value="130">3+ hours</option></select>
+</div>
+
+<div class="card">
+<h2>3. Special items</h2>
+<div id="items"></div>
+<button class="light" onclick="addItem()">+ Add special item</button>
+</div>
+
+<div class="card">
+<h2>4. Your costs</h2>
+<div class="grid">
+<div><label>Dump/disposal estimate</label><input id="dump" type="number" value="20"></div>
+<div><label>Other direct costs</label><input id="other" type="number" value="10"></div>
+</div>
+<div class="small">Sarasota County currently lists $60.85/ton for solid waste with a $15 minimum, $59.91/ton for C&D with a $19.77 minimum, $47.43/ton for yard waste with a $13 minimum, and $3.62 per passenger tire (up to five). Electronic landfill payments have a 2.45% surcharge (minimum $1). Rates can change, so the estimator keeps your job-level disposal estimate editable.</div>
+</div>
+
+<button class="primary" onclick="calculate()">CALCULATE QUOTE</button>
+
+<div id="result" class="result">
+<div class="muted">Recommended customer price</div>
+<div class="big" id="total">$0</div>
+<div class="line"><span>Estimated volume</span><span id="volume">0 yd³</span></div>
+<div class="line"><span>Base volume price</span><span id="volprice">$0</span></div>
+<div class="line"><span>Access + labor</span><span id="extras">$0</span></div>
+<div class="line"><span>Special items</span><span id="special">$0</span></div>
+<hr>
+<div class="line profit"><span>Estimated gross profit</span><span id="profit">$0</span></div>
+</div>
+
+<div class="card">
+<h2>Customer quote</h2>
+<div id="quote">Calculate a quote first.</div>
+<button class="secondary" onclick="copyQuote()">Copy Quote</button>
+<button class="light" style="margin-top:10px" onclick="saveQuote()">Save Quote</button>
+<button class="light" style="margin-top:10px" onclick="clearJob()">New Job</button>
+</div>
+<div class="card">
+<h2>Saved Quotes</h2>
+<div id="saved_quotes" class="small">No saved quotes yet.</div>
+</div>
+</main>
+
+<script>
+const itemsData=[
+["Mattress",40],["Box spring",30],["Refrigerator",50],["Freezer",50],
+["Washer/Dryer",45],["Stove/Oven",40],["Water heater",45],["TV",25],
+["Tire",15],["Sofa/Couch",40],["Hot tub",150],["Construction debris",50],
+["Heavy material",100],["Other",0]
+];
+function addItem(){
+ const wrap=document.createElement("div");wrap.className="itemrow";
+ wrap.innerHTML=`<select>${itemsData.map((x,i)=>`<option value="${x[1]}">${x[0]}</option>`).join("")}</select>
+ <input type="number" value="1" min="1" aria-label="quantity">`;
+ document.getElementById("items").appendChild(wrap);
+}
+function money(n){return "$"+Math.round(n).toLocaleString()}
+function calculate(){
+ const cap=+document.getElementById("capacity").value || 4.44, pct=+document.getElementById("load").value;
+ const volume=cap*pct;
+ const base=+document.getElementById("base").value;
+ const yard=+document.getElementById("yard").value;
+ const travel=+document.getElementById("travel").value;
+ const margin=Math.max(0,Math.min(90,+document.getElementById("margin").value));
+ const access=+document.getElementById("access").value;
+ const labor=+document.getElementById("labor").value;
+
+ let special=0;
+ let itemText=[];
+ document.querySelectorAll(".itemrow").forEach(r=>{
+   const sel=r.querySelector("select"), qty=+r.querySelector("input").value;
+   const price=+sel.value;
+   if(qty>0){special+=price*qty; itemText.push(`${qty} × ${sel.options[sel.selectedIndex].text}`);}
+ });
+
+ const tierPrices=[
+   [0.125,+document.getElementById("p_18").value],
+   [0.1667,+document.getElementById("p_16").value],
+   [0.25,+document.getElementById("p_14").value],
+   [0.3333,+document.getElementById("p_13").value],
+   [0.5,+document.getElementById("p_12").value],
+   [0.6667,+document.getElementById("p_23").value],
+   [0.75,+document.getElementById("p_34").value],
+   [1,+document.getElementById("p_full").value]
+ ];
+ const volumePrice=(pct<=0.125 ? Math.max(+document.getElementById("p_min").value,tierPrices[0][1]) :
+   (tierPrices.find(x=>pct<=x[0])||tierPrices[tierPrices.length-1])[1]);
+ const preCostPrice=volumePrice+access+labor+special+travel;
+ const marginPrice=(directCosts/(1-margin/100));
+ const total=Math.ceil(Math.max(preCostPrice,marginPrice)/5)*5;
+ const profit=total-directCosts;
+
+ document.getElementById("total").textContent=money(total);
+ document.getElementById("volume").textContent=volume.toFixed(1)+" yd³";
+ document.getElementById("volprice").textContent=money(volumePrice);
+ document.getElementById("extras").textContent=money(access+labor+travel);
+ document.getElementById("special").textContent=money(special);
+ document.getElementById("profit").textContent=money(profit);
+
+ const name=document.getElementById("cust_name").value.trim();
+ const phone=document.getElementById("cust_phone").value.trim();
+ const address=document.getElementById("cust_address").value.trim();
+ const notes=document.getElementById("job_notes").value.trim();
+ const date=document.getElementById("job_date").value;
+ document.getElementById("quote").innerHTML=
+ `<strong>B.G. Bicklehooper Junk Removal</strong><br><br>
+ ${name ? "<strong>Customer:</strong> "+name+"<br>" : ""}
+ ${phone ? "<strong>Phone:</strong> "+phone+"<br>" : ""}
+ ${address ? "<strong>Address:</strong> "+address+"<br>" : ""}
+ ${date ? "<strong>Date:</strong> "+date+"<br>" : ""}
+ ${notes ? "<strong>Notes:</strong> "+notes+"<br>" : ""}
+ <br>
+ Estimated removal: <strong>${volume.toFixed(1)} cubic yards</strong><br>
+ Total price: <strong>${money(total)}</strong><br><br>
+ ${itemText.length ? "Special items: "+itemText.join(", ")+"<br><br>" : ""}
+ Thank you for choosing B.G. Bicklehooper Junk Removal!`;
+}
+function copyQuote(){
+ navigator.clipboard?.writeText(document.getElementById("quote").innerText);
+}
+addItem(); loadSettings(); calculate();
+
+function saveSettings(){
+  ["capacity","base","yard","margin","travel","dump","other","p_min","p_18","p_16","p_14","p_13","p_12","p_23","p_34","p_full"].forEach(id=>{
+    const el=document.getElementById(id); if(el) localStorage.setItem("bg_"+id,el.value);
+  });
+}
+function loadSettings(){
+  ["capacity","base","yard","margin","travel","dump","other","p_min","p_18","p_16","p_14","p_13","p_12","p_23","p_34","p_full"].forEach(id=>{
+    const el=document.getElementById(id), v=localStorage.getItem("bg_"+id);
+    if(el && v!==null) el.value=v;
+  });
+}
+document.querySelectorAll("input").forEach(el=>el.addEventListener("change",()=>{saveSettings();calculate();}));
+loadSettings();
+
+function getSavedQuotes(){
+  try { return JSON.parse(localStorage.getItem("bg_saved_quotes") || "[]"); }
+  catch(e){ return []; }
+}
+function saveQuote(){
+  calculate();
+  const record={
+    id: Date.now(),
+    name: document.getElementById("cust_name").value.trim() || "Unnamed customer",
+    phone: document.getElementById("cust_phone").value.trim(),
+    address: document.getElementById("cust_address").value.trim(),
+    date: document.getElementById("job_date").value,
+    notes: document.getElementById("job_notes").value.trim(),
+    total: document.getElementById("total").textContent,
+    quoteText: document.getElementById("quote").innerText
+  };
+  const arr=getSavedQuotes();
+  arr.unshift(record);
+  localStorage.setItem("bg_saved_quotes", JSON.stringify(arr.slice(0,50)));
+  renderSavedQuotes();
+}
+function renderSavedQuotes(){
+  const arr=getSavedQuotes();
+  const box=document.getElementById("saved_quotes");
+  if(!box) return;
+  if(!arr.length){ box.innerHTML="No saved quotes yet."; return; }
+  box.innerHTML="";
+  arr.forEach(r=>{
+    const row=document.createElement("div");
+    row.style.padding="10px 0";
+    row.style.borderBottom="1px solid #ddd";
+    const info=document.createElement("div");
+    info.innerHTML=`<strong>${escapeHtml(r.name)}</strong> — ${escapeHtml(r.total)}<br>${r.address ? escapeHtml(r.address)+"<br>" : ""}${r.date ? escapeHtml(r.date) : ""}`;
+    const copy=document.createElement("button");
+    copy.className="light";
+    copy.style.marginTop="7px";
+    copy.style.padding="8px";
+    copy.textContent="Copy";
+    copy.onclick=()=>navigator.clipboard?.writeText(r.quoteText);
+    const del=document.createElement("button");
+    del.className="light";
+    del.style.marginTop="7px";
+    del.style.padding="8px";
+    del.textContent="Delete";
+    del.onclick=()=>deleteQuote(r.id);
+    row.appendChild(info); row.appendChild(copy); row.appendChild(del);
+    box.appendChild(row);
+  });
+}
+function escapeHtml(v){
+  return String(v ?? "").replace(/[&<>"']/g, c=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#039;"}[c]));
+}
+function deleteQuote(id){
+  const arr=getSavedQuotes().filter(r=>r.id!==id);
+  localStorage.setItem("bg_saved_quotes", JSON.stringify(arr));
+  renderSavedQuotes();
+}
+function clearJob(){
+  ["cust_name","cust_phone","cust_address","job_notes"].forEach(id=>{
+    const el=document.getElementById(id); if(el) el.value="";
+    localStorage.removeItem("bg_"+id);
+  });
+  const d=document.getElementById("job_date"); if(d) d.value="";
+  localStorage.removeItem("bg_job_date");
+  const items=document.getElementById("items");
+  if(items){ items.innerHTML=""; addItem(); }
+  calculate();
+}
+function loadJobDraft(){
+  ["cust_name","cust_phone","cust_address","job_notes","job_date"].forEach(id=>{
+    const el=document.getElementById(id), v=localStorage.getItem("bg_"+id);
+    if(el && v!==null) el.value=v;
+    if(el) el.addEventListener("input",()=>{ localStorage.setItem("bg_"+id,el.value); calculate(); });
+  });
+}
+
+loadJobDraft();
+renderSavedQuotes();
+</script>
+</body>
+</html>
