@@ -157,7 +157,12 @@ function calculate(){
  const margin=Math.max(0,Math.min(90,+document.getElementById("margin").value));
  const access=+document.getElementById("access").value;
  const labor=+document.getElementById("labor").value;
+const dump=+document.getElementById("dump").value;
 
+const other=+document.getElementById("other").value;
+
+const directCosts=dump+other+travel;
+  
  let special=0;
  let itemText=[];
  document.querySelectorAll(".itemrow").forEach(r=>{
