@@ -6,7 +6,7 @@
   <meta name="theme-color" content="#0b4f2c">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>B.G. Bicklehooper Estimator V6</title>
+  <title>B.G. Bicklehooper Estimator V7</title>
   <style>
     *{box-sizing:border-box}
     :root{--bg:#0b4f2c;--card:#f8faf8;--ink:#101510;--muted:#5e675f;--green:#247d3f;--green-dark:#063a20;--green-mid:#0b5a31;--lime:#9bd63b;--line:#cbd5cd;--warn:#fff4d8;--danger:#ffe5e5}
@@ -62,7 +62,7 @@
 <body>
 <header>
   <h1>B.G. Bicklehooper Junk Removal</h1>
-  <div class="sub">Sarasota • Quick Quote Estimator V6</div>
+  <div class="sub">Sarasota • Quick Quote Estimator V7</div>
 </header>
 
 <main>
@@ -159,11 +159,20 @@
     </div>
   </section>
 
+  <section class="card">
+    <h2>Courtesy discount</h2>
+    <label for="discount">Discount amount</label>
+    <input id="discount" type="number" min="0" step="1" value="0" inputmode="decimal">
+    <p class="muted">Optional. Enter any dollar amount you choose, such as $10, $25, $35 or $50. The regular price remains visible below.</p>
+  </section>
+
   <button class="primary" type="button" onclick="calculate()">CALCULATE QUOTE</button>
 
   <section id="results" class="results">
-    <div style="color:#bbb">Recommended customer price</div>
+    <div style="color:#bbb">Final customer price</div>
     <div class="big" id="r_total">$0</div>
+    <div class="row"><span>Regular price</span><strong id="r_regular">$0</strong></div>
+    <div class="row"><span>Courtesy discount</span><strong id="r_discount">$0</strong></div>
     <div class="row"><span>Estimated volume</span><strong id="r_volume">0 yd³</strong></div>
     <div class="row"><span>Base load price</span><strong id="r_base">$0</strong></div>
     <div class="row"><span>Customer adjustments</span><strong id="r_adjust">$0</strong></div>
@@ -340,7 +349,10 @@ function calculate(){
   const access=num("access");
   const labor=laborCustom?0:+laborVal;
   const adjustments=access+labor+t.charge;
-  const total=custom?0:base+adjustments+s.total;
+  const regularTotal=custom?0:base+adjustments+s.total;
+  const requestedDiscount=Math.max(0,num("discount"));
+  const discount=custom?0:Math.min(requestedDiscount,regularTotal);
+  const total=custom?0:Math.max(0,regularTotal-discount);
 
   const dump=num("dump");
   const vehicle=num("business_miles")*num("mileage_rate");
@@ -352,6 +364,8 @@ function calculate(){
   const margin=total>0?(profit/total*100):0;
 
   document.getElementById("r_total").textContent=custom?"CUSTOM":money(total);
+  document.getElementById("r_regular").textContent=custom?"—":money(regularTotal);
+  document.getElementById("r_discount").textContent=custom?"—":(discount>0?"−"+money(discount):money(0));
   document.getElementById("r_volume").textContent=l.volume.toFixed(2).replace(/0$/,"")+" yd³";
   document.getElementById("r_base").textContent=money(base);
   document.getElementById("r_adjust").textContent=money(adjustments);
@@ -381,7 +395,7 @@ function calculate(){
     status.classList.add("low");
   }
 
-  buildQuote({custom,l,total,access,labor,travel:t,special:s});
+  buildQuote({custom,l,total,regularTotal,discount,access,labor,travel:t,special:s});
 }
 
 function buildQuote(ctx){
@@ -412,6 +426,8 @@ function buildQuote(ctx){
     "",
     `Estimated removal: ${ctx.l.volume.toFixed(2).replace(/0$/,"")} cubic yards`,
     ...extras,
+    `Regular price: ${money(ctx.regularTotal)}`,
+    ctx.discount>0?`Courtesy discount: -${money(ctx.discount)}`:"",
     `Total price: ${money(ctx.total)}`,
     notes?`Notes: ${notes}`:"",
     "",
@@ -502,6 +518,7 @@ function newJob(){
   document.getElementById("helper_hours").value=0;
   document.getElementById("owner_hours").value=1;
   document.getElementById("other_costs").value=0;
+  document.getElementById("discount").value=0;
   document.getElementById("heavy_toggle").checked=false;
   document.getElementById("heavy_warning").classList.add("hidden");
   document.getElementById("items").innerHTML="";
