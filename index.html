@@ -3,45 +3,49 @@
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-  <meta name="theme-color" content="#0b4f2c">
+  <meta name="theme-color" content="#f4511e">
   <meta name="apple-mobile-web-app-capable" content="yes">
   <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-  <title>B.G. Bicklehooper Estimator V7</title>
+  <title>Knox Haulers Estimator V7</title>
   <style>
     *{box-sizing:border-box}
-    :root{--bg:#0b4f2c;--card:#f8faf8;--ink:#101510;--muted:#5e675f;--green:#247d3f;--green-dark:#063a20;--green-mid:#0b5a31;--lime:#9bd63b;--line:#cbd5cd;--warn:#fff4d8;--danger:#ffe5e5}
+    :root{--bg:#f4511e;--card:#ffffff;--ink:#151515;--muted:#626262;--green:#f4511e;--green-dark:#171717;--green-mid:#f4511e;--lime:#f4511e;--line:#f4511e;--warn:#fff3e8;--danger:#ffe5df;--orange-soft:#f4511e;--orange-pale:#ffffff;--orange-border:#f4511e}
     body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Arial,sans-serif;background:var(--bg);color:var(--ink)}
-    header{background:linear-gradient(180deg,#063a20 0%,#0b4f2c 100%);color:#fff;border-bottom:2px solid #9bd63b;padding:calc(28px + env(safe-area-inset-top)) 20px 20px;position:sticky;top:0;z-index:2}
+    header{background:#f4511e;color:#fff;border-bottom:4px solid #171717;padding:calc(28px + env(safe-area-inset-top)) 20px 20px;position:sticky;top:0;z-index:2;box-shadow:0 10px 26px rgba(0,0,0,.18)}
     header h1{font-size:27px;margin:0 0 6px;line-height:1.1}
-    header .sub{color:#d8eadc;font-size:17px}
-    main{max-width:720px;margin:auto;padding:20px 16px 60px;background:linear-gradient(180deg,#0b4f2c 0%,#073f24 100%)}
-    .card{background:var(--card);border:1px solid rgba(155,214,59,.55);border-radius:22px;padding:22px;margin:0 0 18px;box-shadow:0 5px 18px rgba(0,0,0,.18)}
+    header .sub{color:#fff3ef;font-size:17px}
+    main{max-width:720px;margin:auto;padding:20px 16px 60px;background:#f4511e}
+    .card{background:var(--card);border:2px solid #f4511e;border-radius:22px;padding:22px;margin:0 0 18px;box-shadow:0 8px 20px rgba(0,0,0,.08)}
     h2{font-size:27px;margin:0 0 20px}
     h3{font-size:20px;margin:0 0 14px}
     label{display:block;font-weight:750;font-size:16px;margin:14px 0 7px}
     input,select,textarea,button{font:inherit}
-    input,select,textarea{width:100%;padding:14px 13px;border:1px solid #cfd3d7;border-radius:14px;background:#fff;font-size:18px}
+    input,select,textarea{width:100%;padding:16px 14px;border:2px solid #d7d7d7;border-radius:16px;background:#fff;font-size:18px}
     textarea{min-height:88px;resize:vertical}
+    input:focus,select:focus,textarea:focus{outline:2px solid rgba(244,81,30,.35);border-color:#f4511e}
+    h2{border-left:5px solid #f4511e;padding-left:10px}
+    header h1{font-weight:950;letter-spacing:.01em}
+    .primary,.secondary,.light{box-shadow:0 2px 0 rgba(0,0,0,.12)}
     .grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
     @media(max-width:560px){.grid2{grid-template-columns:1fr 1fr}.compact-stack{grid-template-columns:1fr}}
-    .muted{color:var(--muted);font-size:14px;line-height:1.4}
+    .muted{color:var(--muted);font-size:14px;line-height:1.4} .card .muted{color:#626262}
     .owner{border:2px solid var(--lime)}
-    .owner-badge{display:inline-block;background:var(--green-dark);color:#fff;padding:5px 9px;border-radius:999px;font-size:12px;font-weight:800;letter-spacing:.04em;margin-bottom:10px}
+    .owner-badge{display:inline-block;background:var(--green);color:#fff;padding:6px 10px;border-radius:999px;font-size:12px;font-weight:800;letter-spacing:.04em;margin-bottom:10px;box-shadow:0 4px 12px rgba(244,81,30,.22)}
     .warning{background:var(--warn);border:1px solid #f0ca72;border-radius:14px;padding:14px;margin-top:14px;font-weight:700}
     .danger{background:var(--danger);border:1px solid #e7aaaa;border-radius:14px;padding:14px;margin-top:14px;font-weight:800}
     .hidden{display:none!important}
-    .primary{width:100%;border:0;border-radius:16px;background:var(--green);color:#fff;padding:17px;font-weight:850;font-size:20px}
-    .secondary{width:100%;border:0;border-radius:16px;background:var(--green-dark);color:#fff;padding:15px;font-weight:800;font-size:18px}
-    .light{width:100%;border:0;border-radius:16px;background:#e8eaec;color:#111;padding:15px;font-weight:800;font-size:18px}
+    .primary{width:100%;border:0;border-radius:16px;background:#f4511e;color:#fff;padding:17px;font-weight:850;font-size:20px}
+    .secondary{width:100%;border:0;border-radius:16px;background:#f4511e;color:#fff;padding:15px;font-weight:800;font-size:18px}
+    .light{width:100%;border:2px solid #f4511e;border-radius:16px;background:#ffffff;color:#111;padding:15px;font-weight:800;font-size:18px}
     .itemrow{display:grid;grid-template-columns:1fr 100px 44px;gap:8px;align-items:end;margin-bottom:10px}
     .itemrow label{margin:0}
-    .remove{border:0;border-radius:12px;background:#ececec;height:50px;font-size:22px}
-    .results{background:#07150d;color:#fff;border:1px solid var(--lime);border-radius:22px;padding:22px;margin:18px 0}
+    .remove{border:1px solid #f4511e;border-radius:12px;background:#ffffff;height:50px;font-size:22px}
+    .results{background:#151515;color:#fff;border:3px solid #f4511e;border-radius:22px;padding:22px;margin:18px 0;box-shadow:0 12px 28px rgba(0,0,0,.18)}
     .results .big{font-size:48px;font-weight:900;margin:5px 0 18px;color:var(--lime)}
     .row{display:flex;justify-content:space-between;gap:14px;padding:5px 0;font-size:17px}
     .row strong{text-align:right}
     .divider{border-top:1px solid #aaa;margin:12px 0}
-    .profit{font-size:20px;font-weight:850;color:#e9f7ec}
+    .profit{font-size:20px;font-weight:850;color:#fff}
     .status{margin-top:14px;padding:12px;border-radius:12px;font-weight:900;text-align:center}
     .status.good{background:#dff4e5;color:#14592a}
     .status.review{background:#fff0c7;color:#6a4a00}
@@ -50,19 +54,19 @@
     details summary{font-weight:850;font-size:20px;cursor:pointer}
     .settings-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px 14px;margin-top:14px}
     .settings-grid label{font-size:14px}
-    .saved{padding:12px 0;border-bottom:1px solid #cbd5cd}
+    .saved{padding:12px 0;border-bottom:1px solid #e4e4e4}
     .saved:last-child{border-bottom:0}
     .saved-actions{display:flex;gap:8px;margin-top:8px}
     .saved-actions button{border:0;border-radius:10px;padding:8px 10px;font-weight:700}
-    html{background:#063a20}
+    html{background:#f4511e}
     .primary{box-shadow:0 2px 0 rgba(0,0,0,.18)}
     .primary:active,.secondary:active,.light:active{transform:translateY(1px)}
   </style>
 </head>
 <body>
 <header>
-  <h1>B.G. Bicklehooper Junk Removal</h1>
-  <div class="sub">Sarasota • Quick Quote Estimator V7</div>
+  <h1>Knox Haulers Junk Removal</h1>
+  <div class="sub"><span style="display:inline-block;background:#f4511e;padding:6px 12px;border-radius:999px;border:1px solid rgba(255,255,255,.55)">Sarasota • Quick Quote Estimator V7</span></div>
 </header>
 
 <main>
@@ -169,7 +173,7 @@
   <button class="primary" type="button" onclick="calculate()">CALCULATE QUOTE</button>
 
   <section id="results" class="results">
-    <div style="color:#bbb">Final customer price</div>
+    <div style="color:#cfcfcf">Final customer price</div>
     <div class="big" id="r_total">$0</div>
     <div class="row"><span>Regular price</span><strong id="r_regular">$0</strong></div>
     <div class="row"><span>Courtesy discount</span><strong id="r_discount">$0</strong></div>
@@ -178,7 +182,7 @@
     <div class="row"><span>Customer adjustments</span><strong id="r_adjust">$0</strong></div>
     <div class="row"><span>Special items</span><strong id="r_special">$0</strong></div>
     <div class="divider"></div>
-    <div style="color:#bbb;font-weight:800;margin-bottom:5px">PRIVATE — OWNER ONLY</div>
+    <div style="color:#f4511e;font-weight:800;margin-bottom:5px">PRIVATE — OWNER ONLY</div>
     <div class="row"><span>Disposal</span><strong id="r_dump">$0</strong></div>
     <div class="row"><span>Vehicle allowance</span><strong id="r_vehicle">$0</strong></div>
     <div class="row"><span>Paid helper cost</span><strong id="r_helper">$0</strong></div>
@@ -192,7 +196,7 @@
 
   <section class="card">
     <h2>Customer quote</h2>
-    <div id="quote" class="quote">Calculate a quote first.</div>
+    <div id="quote" class="quote" style="background:#ffffff;border:2px solid #f4511e;border-radius:16px;padding:16px">Calculate a quote first.</div>
     <div style="height:12px"></div>
     <button class="secondary" type="button" onclick="copyQuote()">Copy Quote</button>
     <div style="height:10px"></div>
@@ -406,8 +410,8 @@ function buildQuote(ctx){
   const notes=document.getElementById("notes").value.trim();
 
   if(ctx.custom){
-    lastQuoteText=`B.G. Bicklehooper Junk Removal\nCustom quote required for this job.`;
-    document.getElementById("quote").innerHTML=`<strong>B.G. Bicklehooper Junk Removal</strong><br><br><strong>CUSTOM QUOTE REQUIRED</strong><br>Please review weight, access, disposal and labor before giving a final price.`;
+    lastQuoteText=`Knox Haulers Junk Removal\nCustom quote required for this job.`;
+    document.getElementById("quote").innerHTML=`<strong>Knox Haulers Junk Removal</strong><br><br><strong>CUSTOM QUOTE REQUIRED</strong><br>Please review weight, access, disposal and labor before giving a final price.`;
     return;
   }
 
@@ -418,7 +422,7 @@ function buildQuote(ctx){
   if(ctx.special.text.length) extras.push(`Special items: ${ctx.special.text.join(", ")}`);
 
   const lines=[
-    "B.G. Bicklehooper Junk Removal",
+    "Knox Haulers Junk Removal",
     name?`Customer: ${name}`:"",
     phone?`Phone: ${phone}`:"",
     address?`Address: ${address}`:"",
